@@ -11,7 +11,8 @@ pub fn check_connection(__target: Option<&str>, __count: Option<u8>, __timeout: 
     output2.arg("-c").arg(count_str).arg("-t").arg(timeout_str).arg(target);
     let nothing = output2.output().expect("Command failed to execute.");
     return match nothing.status.success() {
-        true => { true }
+        true => { true },
+        // Some fake falses still come up sometimes.
         false => { false }
     }
 }

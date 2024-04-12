@@ -3,7 +3,7 @@ mod functions;
 
 //use pythonish::cmd;
 use std::env::args;
-use functions::get_request;
+use functions::get_date_from_request;
 
 
 fn real_main_function() {
@@ -18,5 +18,5 @@ fn real_main_function() {
 
 
 fn main() {
-    get_request(None);
+    get_date_from_request(None);
 }

@@ -25,8 +25,8 @@ pub fn get_date_from_request(url: Option<String>) -> String {
     let output = cmd(command);
 
     //TODO: Think of a way to extract date from output.
-    let teste: Vec<_> = output.split("Date").collect();
-    print!("{}", teste.len());
-
-    return String::from("None");
+    let buffer1: Vec<_> = output.split("ate: ").collect();
+    let buffer2: Vec<_> = buffer1[1].split("\n").collect();
+    let date_from_request: &str = buffer2[0];
+    return String::from(date_from_request);
 }

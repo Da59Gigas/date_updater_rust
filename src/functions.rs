@@ -30,3 +30,11 @@ pub fn get_date_from_request(url: Option<String>) -> String {
     let date_from_request: &str = buffer2[0];
     return String::from(date_from_request);
 }
+
+pub fn string_cleaner(string_to_clean: String) -> String {
+    let mut string_cleaned: String = string_to_clean;
+    string_cleaned = String::from(string_cleaned.trim());
+    string_cleaned = String::from(string_cleaned.replace("\n", ""));
+    let to_return_so_it_is_not_a_mutable_string = string_cleaned;
+    return to_return_so_it_is_not_a_mutable_string;
+}

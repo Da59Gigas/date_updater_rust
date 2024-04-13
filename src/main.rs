@@ -4,8 +4,9 @@ mod functions;
 
 //use pythonish::cmd;
 use std::env::args;
+use std::ops::Index;
 use functions::{get_date_from_request, string_cleaner};
-use pythonish::flush;
+use pythonish::{flush};
 
 // Implements the logic of the program.
 fn real_main_function() {
@@ -37,6 +38,7 @@ fn real_main_function() {
         0..=1 => {true},
         _ => {false},
     };
+    println!("\t\t[*] Detected {} extra terminal arguments, UPDATE set to {}", argv2.len()-1, UPDATE);
 
     println!("[*] Starting main logic...");
     // Gets the current time from the metadata present in the heathers of an HTTP response.
@@ -45,25 +47,29 @@ fn real_main_function() {
     let uncleaned_date: String = get_date_from_request(None);
     println!("\t[*] Cleaning received date_string...");
     let date_from_request: String = string_cleaner(uncleaned_date);
-    print!("{}", date_from_request)
+    println!("\t[*] Dissecting date_string...");
+ 	let split_ed: Vec<_> = date_from_request.split(' ').collect();
+    let index1 = ORDER_DATE_REQUEST.iter().position(|&x| x == "year").unwrap();
+    let year = split_ed[index1];
+    print!("Year: {}", year);
+    let index2 = ORDER_DATE_REQUEST.iter().position(|&x| x == "month").unwrap();
+    let month = MONTHS.iter().position(|&x| x == split_ed[index2]).unwrap();
+    print!(" | Month: {}", month);
+    let index3 = ORDER_DATE_REQUEST.iter().position(|&x| x == "month_day").unwrap();
+    let day = split_ed[index3];
+    print!(" | Day: {}", day);
+    let index4 = ORDER_DATE_REQUEST.iter().position(|&x| x == "time").unwrap();
+    let time = split_ed[index4];
+    print!(" | Time: {}", time);
+    let index5 = ORDER_DATE_REQUEST.iter().position(|&x| x == "gomo").unwrap();
+    let gomo = split_ed[index5];
+    print!(" | Gomo: {}\n", gomo);
 }
 
 // Just to run whatever I need, be it tests or the program itself.
 fn main() {
-    //real_main_function()
-    let string = String::from("      Sat, 13 Apr 2024 17:05:48\n GMT\n           ");
-    print!("{}", string_cleaner(string))
+    real_main_function()
 }
-
-// TODO: python logic for parsing the date
-
-// 	date_from_request
-// 	split_ed = date_from_request.split(sep=' ')
-// 	year = split_ed[values.index('year')]
-// 	month = months.index(split_ed[values.index('month')])
-// 	day = split_ed[values.index('month_day')]
-// 	time = split_ed[values.index('time')]
-// 	gomo = split_ed[values.index('gomo')]
 
 // TODO: python logic for the rest of the program
 

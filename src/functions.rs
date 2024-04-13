@@ -38,3 +38,14 @@ pub fn string_cleaner(string_to_clean: String) -> String {
     let to_return_so_it_is_not_a_mutable_string = string_cleaned;
     return to_return_so_it_is_not_a_mutable_string;
 }
+
+pub fn prepare_command(year: &str, month: usize, day: &str,
+                       time: &str, gomo: &str) -> String {
+    if gomo == "GMT" {
+        println!("\t\t[*] Recognized GOMO [GMT]");
+        println!("\t\t[*] Creating the string for the command to be executed to set the system date.");
+        return format!("sudo date --set='{year}-{month}-{day} {time}'");
+    } else {
+        panic!("Time frame not recognized [{gomo}]");
+    }
+}

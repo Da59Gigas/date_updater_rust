@@ -5,8 +5,8 @@ mod functions;
 //use pythonish::cmd;
 use std::env::args;
 use std::ops::Index;
-use functions::{get_date_from_request, string_cleaner};
-use pythonish::{flush};
+use functions::{get_date_from_request, string_cleaner, prepare_command};
+use pythonish::{cmd, flush};
 
 // Implements the logic of the program.
 fn real_main_function() {
@@ -51,7 +51,7 @@ fn real_main_function() {
  	let split_ed: Vec<_> = date_from_request.split(' ').collect();
     let index1 = ORDER_DATE_REQUEST.iter().position(|&x| x == "year").unwrap();
     let year = split_ed[index1];
-    print!("Year: {}", year);
+    print!("\t\tYear: {}", year);
     let index2 = ORDER_DATE_REQUEST.iter().position(|&x| x == "month").unwrap();
     let month = MONTHS.iter().position(|&x| x == split_ed[index2]).unwrap();
     print!(" | Month: {}", month);
@@ -64,6 +64,15 @@ fn real_main_function() {
     let index5 = ORDER_DATE_REQUEST.iter().position(|&x| x == "gomo").unwrap();
     let gomo = split_ed[index5];
     print!(" | Gomo: {}\n", gomo);
+
+    // 	'sudo date --set="2024-1-2 13:50:10"'
+    println!("\t[*] Starting the analise of the date to set...");
+    println!("\t\t[*] Checking the received GOMO...");
+    let	command_to_run = prepare_command(year, month, day, time, gomo);
+    println!("\t\t\t[*] Command to run: [{command_to_run}]");
+    println!("\t[*] Starting the execution of the set date command...");
+    let output = cmd(command_to_run);
+    print!("{}", output)
 }
 
 // Just to run whatever I need, be it tests or the program itself.
@@ -73,8 +82,6 @@ fn main() {
 
 // TODO: python logic for the rest of the program
 
-// 	# sudo date --set="2024-1-2 13:50:10"
-// 	command_ = f'sudo date --set="{year}-{month}-{day} {time}"'
 // 	if gomo == 'GMT':
 // 		print('Time frame recognized [GMT]')
 // 		if UPDATE:

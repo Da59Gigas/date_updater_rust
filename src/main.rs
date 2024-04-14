@@ -6,7 +6,7 @@ mod functions;
 use std::env::args;
 use std::ops::Index;
 use std::process::exit;
-use functions::{get_date_from_request, string_cleaner, prepare_command};
+use functions::{get_date_from_request, string_cleaner, prepare_command, add_one_hour_to_local};
 use pythonish::{cmd, flush, check_root};
 
 // Implements the logic of the program.
@@ -95,6 +95,28 @@ fn real_main_function() {
             println!("\t\t[*] Command execution aborted, UPDATE is False.")
         }
     }
+
+    println!("\t[*] Starting the execution of the SUMMER TIME logic...");
+    println!("\t\t[*] Checking if the system is in summer time...");
+    let current_sys_date = cmd(String::from("date")).replace("\n", "");
+    println!("\t\t\t[*] Current system date/time: ({})", current_sys_date);
+    match current_sys_date.contains("BST") {
+        true => {
+            println!("\t\t\t[*] System is in Summer Time mode.");
+            println!("\t\t[*] Initiating the 'Add one hour process'...");
+            println!("\t\t\t[*] Creating new date string...");
+            let new_date_to_set = add_one_hour_to_local(current_sys_date,
+                                                        MONTHS);
+            println!("\t\t\t[*] New date: ({})", new_date_to_set);
+            match DEBUG_MODE_DEACTIVATED {
+                true => {
+                    println!("-------- Nothing yet --------")
+                }
+                false => {println!("\t\t[*] Command execution aborted, UPDATE is False.") }
+            }
+        }
+        false => {println!("\t\t\t[*] System is not in Summer Time mode.")}
+    }
 }
 
 // Just to run whatever I need, be it tests or the program itself.
@@ -104,23 +126,11 @@ fn main() {
 
 // TODO: python logic for the rest of the program
 
-// 	if gomo == 'GMT':
-// 		print('Time frame recognized [GMT]')
-// 		if UPDATE:
-// 			print('Preparing to set date..')
-// 			cmd(command=command_)
-// 		else:
-// 			print('UPDATE = False')
+// 	print('Summer time detected')
+// 	time2 = __seted_date[3].split(':')
+// 	if UPDATE:
+// 		command_ = f'sudo date --set="{__seted_date[-1]}-{months.index(__seted_date[1])}-{__seted_date[2]} {int(time2[0])+1}:{time2[1]}:{time2[2]} {__seted_date[4]} {__seted_date[5]}"'
+// 		print(f"command_ = [{command_}]")
+// 		cmd(command=command_)
 // 	else:
-// 		print(f'Time frame not recognized [{gomo}]')
-// 	__seted_date = get_cmd("date").replace('\n', '').split(' ')
-// 	print(__seted_date)
-// 	if "BST" in __seted_date:
-// 		print('Summer time detected')
-// 		time2 = __seted_date[3].split(':')
-// 		if UPDATE:
-// 			command_ = f'sudo date --set="{__seted_date[-1]}-{months.index(__seted_date[1])}-{__seted_date[2]} {int(time2[0])+1}:{time2[1]}:{time2[2]} {__seted_date[4]} {__seted_date[5]}"'
-// 			print(f"command_ = [{command_}]")
-// 			cmd(command=command_)
-// 		else:
-// 			print('UPDATE = False')
+// 		print('UPDATE = False')

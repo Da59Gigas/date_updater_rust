@@ -49,3 +49,23 @@ pub fn prepare_command(year: &str, month: usize, day: &str,
         panic!("Time frame not recognized [{gomo}]");
     }
 }
+
+pub fn add_one_hour_to_local(current_system_date: String, months_constant: [&str; 12]) -> String {
+    // current_system_date = "Sun Apr 14 11:22:20 PM BST 2024"
+    // current_time_vector = vec!["Sun", "Apr", "14", "11:22:20", "PM", "BST", "2024"]
+    let current_time_vector: Vec<_> = current_system_date.split(" ").collect();
+
+    let month = months_constant.iter().position(|&x| x == current_time_vector[1]).unwrap();
+
+    let all_times: Vec<_> = current_time_vector[3].split(":").collect();
+    let hour: u8 = all_times[0].parse().unwrap();
+    let minute = all_times[1];
+    let second = all_times[2];
+
+    let time: String = format!("{}:{}:{}", hour+1, minute, second);
+    let command_ = String::from(format!("sudo date --set='{}-{}-{} {} {} {}'",
+                                        current_time_vector[6], month, current_time_vector[2],
+                                        time, current_time_vector[4], current_time_vector[5]));
+
+    return command_;
+}

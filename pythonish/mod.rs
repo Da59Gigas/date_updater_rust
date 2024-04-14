@@ -1,7 +1,8 @@
 #![allow(unused)]
 use std::io::{Write, stdin, stdout, ErrorKind, BufReader, BufRead, Read};
 use std::fs::File;
-use std::process::Command;
+use std::process::{Command, exit};
+use std::env::{var, VarError};
 
 pub mod files;
 
@@ -25,4 +26,18 @@ pub fn cmd(command: String) -> String {
     }
     let nothing = output.output().expect("Command failed to execute.");
     return String::from(String::from_utf8_lossy(&nothing.stdout));
+}
+
+pub fn check_root() -> bool {
+    match var("USER") {
+        Ok(name) => {
+            if name != "root" {
+                return false;
+            };
+        },
+        Err(error) => {
+            panic!("Something went wrong when checking for username: {}", error);
+        }
+    };
+    return true;
 }

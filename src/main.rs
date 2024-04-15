@@ -4,6 +4,7 @@ mod functions;
 
 //use pythonish::cmd;
 use std::env::args;
+use std::fmt::format;
 use std::ops::Index;
 use std::process::exit;
 use functions::{get_date_from_request, string_cleaner, prepare_command, add_one_hour_to_local};
@@ -108,29 +109,24 @@ fn real_main_function() {
             let new_date_to_set = add_one_hour_to_local(current_sys_date,
                                                         MONTHS);
             println!("\t\t\t[*] New date: ({})", new_date_to_set);
+            println!("\t\t[*] Starting the execution of the set summer date command...");
             match DEBUG_MODE_DEACTIVATED {
                 true => {
-                    println!("-------- Nothing yet --------")
+                    let command_to_run2= format!("sudo date --set='{}'", new_date_to_set);
+                    println!("\t\t\t[*] Command to run: [{command_to_run2}]");
+                    println!("\t\t\t[*] Running...");
+                    let output = cmd(command_to_run2);
+                    println!("{}", output)
                 }
                 false => {println!("\t\t[*] Command execution aborted, UPDATE is False.") }
             }
         }
         false => {println!("\t\t\t[*] System is not in Summer Time mode.")}
     }
+    println!("[*] Ended execution of the program.")
 }
 
 // Just to run whatever I need, be it tests or the program itself.
 fn main() {
     real_main_function()
 }
-
-// TODO: python logic for the rest of the program
-
-// 	print('Summer time detected')
-// 	time2 = __seted_date[3].split(':')
-// 	if UPDATE:
-// 		command_ = f'sudo date --set="{__seted_date[-1]}-{months.index(__seted_date[1])}-{__seted_date[2]} {int(time2[0])+1}:{time2[1]}:{time2[2]} {__seted_date[4]} {__seted_date[5]}"'
-// 		print(f"command_ = [{command_}]")
-// 		cmd(command=command_)
-// 	else:
-// 		print('UPDATE = False')
